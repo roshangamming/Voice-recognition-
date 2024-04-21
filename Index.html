@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript AI Assistant</title>
+</head>
+<body>
+    <h1>JavaScript AI Assistant</h1>
+    <div id="output"></div>
+    <button onclick="startAssistant()">Start Assistant</button>
+    <button onclick="stopAssistant()">Stop Assistant</button>
+
+    <script>
+        // Check if browser supports speech recognition and synthesis
+        if ('speechSynthesis' in window && 'SpeechRecognition' in window) {
+            var recognition = new SpeechRecognition();
+            var synthesis = window.speechSynthesis;
+            var output = document.getElementById('output');
+
+            // Event listener for speech recognition
+            recognition.onresult = function(event) {
+                var transcript = event.results[0][0].transcript;
+                output.innerHTML = '<p><strong>You:</strong> ' + transcript + '</p>';
+                respondTo(transcript);
+            };
+
+            // Start the assistant
+            function startAssistant() {
+                recognition.start();
+                output.innerHTML = '<p>Assistant started. Speak now...</p>';
+            }
+
+            // Stop the assistant
+            function stopAssistant() {
+                recognition.stop();
+                output.innerHTML = '<p>Assistant stopped.</p>';
+            }
+
+            // Function to respond to user input
+            function respondTo(input) {
+                var response = generateResponse(input);
+                var utterance = new SpeechSynthesisUtterance(response);
+                synthesis.speak(utterance);
+                output.innerHTML += '<p><strong>AI:</strong> ' + response + '</p>';
+            }
+
+            // Example function to generate AI response
+            function generateResponse(input) {
+                // You can replace this with more sophisticated logic
+                return 'You said: ' + input;
+            }
+        } else {
+            alert('Speech recognition/synthesis not supported in this browser.');
+        }
+    </script>
+</body>
+</html>
